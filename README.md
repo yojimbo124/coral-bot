@@ -1,2 +1,2 @@
 # coral-bot
-OpenClaw Teams bot
+Building a Teams bot using OpenClaw.
