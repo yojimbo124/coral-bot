@@ -21,18 +21,30 @@
 
 Install all of these before loading the dashboard YAML.
 
+**Lovelace cards** (HACS → Frontend):
+
 | Card | HACS search | Repo |
 |------|-------------|------|
 | Mushroom | `mushroom` | piitaya/lovelace-mushroom |
-| Aurora Calendar | custom repo (see below) | davidlop28/ha-aurora-calendar |
 | Card Mod | `card-mod` | thomasloven/lovelace-card-mod |
 | Kiosk Mode | `kiosk-mode` | maykar0/kiosk-mode |
 | Simple Clock Card | `simple-clock-card` | wassy92x/lovelace-simple-clock-card |
 
-**Aurora Calendar (custom repo):**
-HACS → Integrations → ⋮ → Custom Repositories
-- URL: `https://github.com/davidlop28/ha-aurora-calendar`
-- Category: `Lovelace`
+**Aurora Calendar — Custom Integration** (HACS → Integrations, NOT Frontend):
+
+1. HACS → Integrations → ⋮ → Custom Repositories
+   - URL: `https://github.com/davidlop28/ha-aurora-calendar`
+   - Category: **Integration**
+2. Download → restart HA
+3. Settings → Devices & Services → Add Integration → search **"Aurora Calendar"**
+4. In the integration setup wizard, add your HA calendar entities and assign colors:
+   - `calendar.family` → blue `#3498db`
+   - `calendar.jimmy` → purple `#8e44ad`
+   - `calendar.shirin` → green `#27ae60`
+   - `calendar.river` → red `#e74c3c`
+   - `calendar.meals` → orange `#f39c12`
+
+The Lovelace card (`type: custom:aurora-calendar-card`) then pulls its config from the integration automatically — no entity list needed in the card YAML.
 
 ---
 

@@ -1,11 +1,17 @@
 ## Kitchen Wall Display — Lovelace Dashboard
 ##
-## REQUIRED HACS CARDS (install all before using this dashboard):
+## REQUIRED HACS INSTALLS:
+##   Lovelace cards (HACS → Frontend):
 ##   - mushroom           https://github.com/piitaya/lovelace-mushroom
-##   - aurora-calendar    https://github.com/davidlop28/ha-aurora-calendar
 ##   - card-mod           https://github.com/thomasloven/lovelace-card-mod
 ##   - kiosk-mode         https://github.com/maykar0/kiosk-mode
 ##   - simple-clock-card  https://github.com/wassy92x/lovelace-simple-clock-card
+##
+##   Custom Integration (HACS → Integrations — NOT Frontend):
+##   - aurora-calendar    https://github.com/davidlop28/ha-aurora-calendar
+##     After installing: restart HA, then go to
+##     Settings → Devices & Services → Add Integration → search "Aurora Calendar"
+##     Configure it with your HA calendar entities there (colors/names set in the integration)
 ##
 ## HOW TO LOAD INTO HA:
 ##   Settings → Dashboards → Add Dashboard (or edit existing "Kitchen")
@@ -24,17 +30,10 @@ views:
       - type: vertical-stack
         cards:
 
-          ## ── KIOSK MODE ──────────────────────────────────────────────────────
-          ## Hides HA header and sidebar when ?kiosk is in the URL.
-          ## Remove this card if you do NOT want kiosk mode.
-          - type: custom:kiosk-mode
-            kiosk_mode:
-              query_strings:
-                - value: kiosk
-                  hide_header: true
-                  hide_sidebar: true
-
           ## ── HEADER ROW: Weather · Date · Clock ──────────────────────────────
+          ## KIOSK MODE: no card needed — kiosk-mode activates automatically
+          ## when the URL includes ?kiosk. Access at:
+          ##   http://homeassistant.local:8123/kitchen/home?kiosk
           - type: horizontal-stack
             cards:
               - type: custom:mushroom-chips-card
@@ -183,41 +182,29 @@ views:
                       }
 
           ## ── WEEKLY CALENDAR (aurora-calendar) ───────────────────────────────
-          ## Replaces week-planner-card with aurora-calendar for richer UI:
-          ##   - Event creation/editing from the display
-          ##   - Drag-to-reschedule
-          ##   - Weather forecast overlay in the header
-          ##   - Multiple view modes (tap the header to switch week ↔ month)
+          ## aurora-calendar is a CUSTOM INTEGRATION, not a Lovelace card.
+          ## Install steps:
+          ##   1. HACS → Integrations → ⋮ → Custom Repositories
+          ##      URL: https://github.com/davidlop28/ha-aurora-calendar
+          ##      Category: Integration
+          ##   2. Download and restart HA
+          ##   3. Settings → Devices & Services → Add Integration → "Aurora Calendar"
+          ##   4. In the integration setup, add your calendar entities and set
+          ##      their colors (calendar.family, .jimmy, .shirin, .river, .meals)
           ##
-          ## Install aurora-calendar via HACS → Custom Repositories:
-          ##   URL: https://github.com/davidlop28/ha-aurora-calendar
-          ##   Category: Lovelace
-          ##
-          ## After installing, the card has a built-in visual editor — use it
-          ## to fine-tune display options (fonts, hours range, background, etc.)
+          ## The card below then reads config from the integration automatically.
+          ## Use the card's built-in visual editor (pencil icon) to adjust
+          ## hour range, font size, weather overlay, background style, etc.
           - type: custom:aurora-calendar-card
-            view_mode: week
+            integration: aurora_calendar
+            week_start: sunday
             show_weather: true
-            weather_entity: weather.forecast_home
-            start_hour: 6
-            end_hour: 22
-            show_filters: true
-            entities:
-              - calendar: calendar.family
-                color: "#3498db"
-                name: Family
-              - calendar: calendar.jimmy
-                color: "#8e44ad"
-                name: Jimmy
-              - calendar: calendar.shirin
-                color: "#27ae60"
-                name: Shirin
-              - calendar: calendar.river
-                color: "#e74c3c"
-                name: River
-              - calendar: calendar.meals
-                color: "#f39c12"
-                name: Meals
+            visible_start_hour: 6
+            visible_end_hour: 22
+            time_format: 12h
+            show_event_time: true
+            dim_past_events: true
+            height_mode: auto
 
           ## ── MEALS + GROCERY LIST ────────────────────────────────────────────
           - type: horizontal-stack
